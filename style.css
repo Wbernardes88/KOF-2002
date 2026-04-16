@@ -1572,7 +1572,14 @@ input { font: inherit; color: inherit; background: none; border: none; outline: 
   flex: 1;
 }
 
-.move-edit-btn {
+.move-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.move-edit-btn,
+.move-delete-btn {
   width: 28px;
   height: 28px;
   padding: 0;
@@ -1589,6 +1596,12 @@ input { font: inherit; color: inherit; background: none; border: none; outline: 
 }
 
 .move-edit-btn:hover {
+  background: rgba(220,31,31,0.12);
+  border-color: rgba(220,31,31,0.25);
+  color: var(--red);
+}
+
+.move-delete-btn:hover {
   background: rgba(220,31,31,0.12);
   border-color: rgba(220,31,31,0.25);
   color: var(--red);

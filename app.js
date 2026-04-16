@@ -53,13 +53,49 @@ const DB = {
           moves: []
         }
       ]
+    },
+    {
+      id: 'kim',
+      name: 'Kim',
+      fullName: 'Kim Kaphwan',
+      team: 'Corea Team',
+      style: 'Flame Mastery',
+      tier: 'S',
+      image: 'Imagens/Kim.png',  // Opcional: imagem real. Se omitido, usa avatarGradient + avatarText
+      avatarGradient: ['#d4641e', '#8b3f00'],
+      avatarText: 'K',
+      tags: ['FIRE', 'RUSHDOWN', 'OVERHEAD'],
+      categories: [
+        {
+          id: 'combos',
+          name: 'Combos e Combos com Especiais',
+          type: 'combo',
+          description: 'Sequências de ataque e combos ligados a golpes especiais.',
+          moves: []
+        },
+        {
+          id: 'secrets',
+          name: 'Secreto',
+          type: 'secret',
+          description: 'Movimentos secretos, técnicas avançadas e setups ocultos.',
+          moves: []
+        },
+        {
+          id: 'specials',
+          name: 'Especiais',
+          type: 'special',
+          description: 'Golpes especiais, DMs e SDMs da personagem.',
+          moves: []
+        }
+      ]
     }
+
     /*
     ESTRUTURA PRONTA PARA EXPANSÃO:
     Para adicionar novos personagens, siga o padrão abaixo:
 
     {
-      id: 'kyo',
+      id: 'kim',
       name: 'Kyo',
       fullName: 'Kyo Kusanagi',
       team: 'Japan Team',
@@ -94,7 +130,8 @@ const DB = {
       ]
     },
     */
-  ]
+
+   ]
 };
 
 /* ──────────────────────────────────────────────────────
@@ -525,12 +562,19 @@ function renderMovesList(category) {
           <div class="move-card">
             <div class="move-header">
               <div class="move-title">${move.name}</div>
-              <button class="move-edit-btn" onclick="openAddMoveModal('${move.id}')" title="Editar movimento">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-              </button>
+              <div class="move-actions">
+                <button class="move-edit-btn" onclick="openAddMoveModal('${move.id}')" title="Editar movimento">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button class="move-delete-btn" onclick="deleteMove('${move.id}')" title="Excluir movimento">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+                  </svg>
+                </button>
+              </div>
             </div>
             <div class="move-inputs">
               ${commandHtml}
@@ -871,6 +915,35 @@ document.addEventListener('click', (e) => {
   }
 });
 
+/* ──────────────────────────────────────────────────────
+   DELETE MOVE
+────────────────────────────────────────────────────── */
+
+function deleteMove(moveId) {
+  if (!state.currentCharacter || !state.currentCategory) {
+    return;
+  }
+
+  const move = state.currentCategory.moves.find(m => m.id === moveId);
+  if (!move) return;
+
+  // Confirmação
+  const confirmed = confirm(`Tem certeza que deseja excluir este movimento?\n\n"${move.name}"`);
+  if (!confirmed) return;
+
+  // Remover movimento
+  const moveIndex = state.currentCategory.moves.findIndex(m => m.id === moveId);
+  if (moveIndex !== -1) {
+    state.currentCategory.moves.splice(moveIndex, 1);
+  }
+
+  // Salvar no localStorage
+  Storage.save(DB);
+
+  // Re-render categoria
+  renderCategoryDetail(state.currentCharacter, state.currentCategory);
+}
+
 // Expose globally for inline onclick use
 window.DB           = DB;
 window.navigate     = navigate;
@@ -885,6 +958,7 @@ window.closeMobileSidebar = closeMobileSidebar;
 window.openAddMoveModal = openAddMoveModal;
 window.closeAddMoveModal = closeAddMoveModal;
 window.saveNewMove = saveNewMove;
+window.deleteMove = deleteMove;
 
 /* ──────────────────────────────────────────────────────
    PWA — SERVICE WORKER REGISTRATION
