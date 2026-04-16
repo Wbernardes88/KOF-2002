@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A comprehensive move database and combo tracker for The King of Fighters 2002">
+  <meta name="theme-color" content="#03030a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KOF 2002">
+  <title>KOF 2002 — Move Database</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23dc1f1f' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='900' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='monospace'>KOF</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Oxanium:wght@300;400;500;600;700;800&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       INTRO SCREEN
+  ════════════════════════════════════════ -->
+  <div id="intro-screen" class="intro-screen">
+    <div class="intro-noise"></div>
+    <div class="intro-scanlines"></div>
+    <div class="intro-grid"></div>
+    <div class="intro-vignette"></div>
+
+    <div class="intro-corner corner-tl"></div>
+    <div class="intro-corner corner-tr"></div>
+    <div class="intro-corner corner-bl"></div>
+    <div class="intro-corner corner-br"></div>
+
+    <div class="intro-side-lines">
+      <div class="side-line left"></div>
+      <div class="side-line right"></div>
+    </div>
+
+    <div class="intro-content">
+      <div class="intro-eyebrow">THE KING OF FIGHTERS</div>
+
+      <div class="intro-title-wrap">
+        <div class="intro-kof" data-text="KOF">KOF</div>
+        <div class="intro-year-wrap">
+          <div class="intro-year-line"></div>
+          <div class="intro-year">2002</div>
+          <div class="intro-year-line"></div>
+        </div>
+      </div>
+
+      <div class="intro-subtitle">MOVE DATABASE</div>
+
+      <div class="intro-divider">
+        <div class="divider-line"></div>
+        <div class="divider-diamond"></div>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="intro-loading-wrap">
+        <div class="intro-loading-label">INICIANDO SISTEMA</div>
+        <div class="intro-loading-bar">
+          <div class="loading-progress"></div>
+          <div class="loading-glow"></div>
+        </div>
+        <div class="intro-loading-pct" id="loading-pct">0%</div>
+      </div>
+
+      <button class="intro-skip-btn" onclick="skipIntro()">
+        <span>◆</span> PRESSIONE PARA ENTRAR
+      </button>
+    </div>
+
+    <div class="intro-bottom-bar">
+      <span class="mono">SYS v1.0.0</span>
+      <span class="mono">ROSTER: 1 FIGHTER</span>
+      <span class="mono">LOCAL DB READY</span>
+    </div>
+  </div>
+
+  <!-- Mobile menu button (floating, fixed) -->
+  <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- ═══════════════════════════════════════
+       MAIN APPLICATION
+  ════════════════════════════════════════ -->
+  <div id="app" class="app app-hidden">
+
+    <!-- SIDEBAR -->
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-emblem">
+          <div class="emblem-inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <polygon points="12,2 22,8 22,16 12,22 2,16 2,8" stroke="#e02020" stroke-width="1.5" fill="none"/>
+              <polygon points="12,5 19,9 19,15 12,19 5,15 5,9" stroke="#e02020" stroke-width="0.8" fill="rgba(224,32,32,0.08)"/>
+              <circle cx="12" cy="12" r="2.5" fill="#e02020"/>
+            </svg>
+          </div>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="logo-kof">KOF</span>
+          <span class="logo-year-badge">2002</span>
+        </div>
+        <!-- Collapse toggle (desktop) -->
+        <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" onclick="toggleSidebar()" title="Recolher menu" aria-label="Recolher menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <div class="sidebar-section-label">NAVEGAÇÃO</div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-view="characters" data-tooltip="Personagens" onclick="navigate('characters', this); return false;" href="#">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/>
+            </svg>
+          </span>
+          <span class="nav-label">Personagens</span>
+          <span class="nav-count">1</span>
+        </a>
+
+        <a class="nav-item" data-view="favorites" data-tooltip="Favoritos" onclick="navigate('favorites', this); return false;" href="#">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </span>
+          <span class="nav-label">Favoritos</span>
+        </a>
+
+        <a class="nav-item" data-view="settings" data-tooltip="Configurações" onclick="navigate('settings', this); return false;" href="#">
+          <span class="nav-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.07 4.93 17.66 6.34M4.93 4.93l1.41 1.41M12 2v2M12 20v2M4.22 19.78l1.41-1.41M18.36 18.36l1.41 1.41M2 12h2M20 12h2"/>
+            </svg>
+          </span>
+          <span class="nav-label">Configurações</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-status">
+          <span class="status-dot"></span>
+          <span class="status-text">LOCAL DB</span>
+        </div>
+        <div class="sidebar-version">v1.0.0</div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="main-content">
+
+      <!-- ── VIEW: CHARACTERS LIST ── -->
+      <section id="view-characters" class="view active">
+        <header class="content-header">
+          <div class="header-info">
+            <span class="header-crumb">DATABASE</span>
+            <h1 class="header-title">Personagens</h1>
+          </div>
+          <div class="header-actions">
+            <div class="search-wrap">
+              <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input class="search-input" type="text" placeholder="Buscar personagem..." oninput="filterCharacters(this.value)">
+            </div>
+          </div>
+        </header>
+
+        <div class="content-body">
+          <div class="roster-label">
+            <span class="roster-line"></span>
+            <span class="roster-text">ROSTER ATIVO</span>
+            <span class="roster-count" id="roster-count">1 lutador</span>
+          </div>
+
+          <div class="character-list" id="character-list"></div>
+
+          <div class="coming-soon-card">
+            <div class="cs-icon-wrap">
+              <span class="cs-plus">+</span>
+            </div>
+            <div class="cs-body">
+              <div class="cs-title">Mais personagens em breve</div>
+              <div class="cs-desc">O roster será expandido progressivamente conforme você adicionar lutadores ao banco de dados.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── VIEW: CHARACTER DETAIL ── -->
+      <section id="view-character-detail" class="view">
+        <header class="content-header">
+          <div class="header-info">
+            <button class="back-btn" onclick="navigate('characters')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Personagens
+            </button>
+          </div>
+        </header>
+        <div class="content-body" id="character-detail-body"></div>
+      </section>
+
+      <!-- ── VIEW: CATEGORY DETAIL ── -->
+      <section id="view-category-detail" class="view">
+        <header class="content-header">
+          <div class="header-info">
+            <button class="back-btn" id="btn-back-to-char" onclick="backToCharacter()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              <span id="back-char-label">Athena</span>
+            </button>
+          </div>
+        </header>
+        <div class="content-body" id="category-detail-body"></div>
+      </section>
+
+      <!-- ── VIEW: FAVORITES ── -->
+      <section id="view-favorites" class="view">
+        <header class="content-header">
+          <div class="header-info">
+            <span class="header-crumb">COLEÇÃO</span>
+            <h1 class="header-title">Favoritos</h1>
+          </div>
+        </header>
+        <div class="content-body">
+          <div class="empty-state">
+            <div class="empty-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div class="empty-title">Sem favoritos</div>
+            <div class="empty-desc">Marque combos e golpes como favoritos para acessá-los rapidamente aqui.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── VIEW: SETTINGS ── -->
+      <section id="view-settings" class="view">
+        <header class="content-header">
+          <div class="header-info">
+            <span class="header-crumb">SISTEMA</span>
+            <h1 class="header-title">Configurações</h1>
+          </div>
+        </header>
+        <div class="content-body">
+          <div class="empty-state">
+            <div class="empty-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.07 4.93 17.66 6.34M4.93 4.93l1.41 1.41M12 2v2M12 20v2M4.22 19.78l1.41-1.41M18.36 18.36l1.41 1.41M2 12h2M20 12h2"/>
+              </svg>
+            </div>
+            <div class="empty-title">Em desenvolvimento</div>
+            <div class="empty-desc">Configurações de exibição e exportação serão adicionadas em breve.</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ── MODAL: ADD MOVE ── -->
+    <div id="add-move-modal" class="add-move-modal">
+      <div class="add-move-overlay" onclick="closeAddMoveModal()"></div>
+      <div class="add-move-dialog">
+        <div class="add-move-header">
+          <h2 class="add-move-title">Adicionar Movimento</h2>
+          <button class="add-move-close" onclick="closeAddMoveModal()" aria-label="Fechar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="add-move-body">
+          <!-- Nome personalizado -->
+          <div class="form-group">
+            <label class="form-label">Nome personalizado <span class="optional">(opcional)</span></label>
+            <input type="text" id="move-name-input" class="form-input" placeholder="Ex: BnB Básico, Hadoken, etc.">
+          </div>
+
+          <!-- Comando visual -->
+          <div class="form-group">
+            <label class="form-label">Comando visual <span class="required">*</span></label>
+            <textarea id="move-command-input" class="form-input form-input-cmd" placeholder="Ex: ⬇️ ↘️ ➡️ + A/C" rows="2"></textarea>
+            <div class="cmd-builder">
+              <div class="cmd-builder-row">
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('⬆️')">⬆️</button>
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('↗️')">↗️</button>
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('➡️')">➡️</button>
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('↘️')">↘️</button>
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('⬇️')">⬇️</button>
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('↙️')">↙️</button>
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('⬅️')">⬅️</button>
+                <button type="button" class="cmd-btn cmd-btn-dir" onclick="cmdInsert('↖️')">↖️</button>
+              </div>
+              <div class="cmd-builder-row">
+                <button type="button" class="cmd-btn cmd-btn-atk" onclick="cmdInsert('A')">A</button>
+                <button type="button" class="cmd-btn cmd-btn-atk" onclick="cmdInsert('B')">B</button>
+                <button type="button" class="cmd-btn cmd-btn-atk" onclick="cmdInsert('C')">C</button>
+                <button type="button" class="cmd-btn cmd-btn-atk" onclick="cmdInsert('D')">D</button>
+                <button type="button" class="cmd-btn cmd-btn-sym" onclick="cmdInsert('+')">+</button>
+                <button type="button" class="cmd-btn cmd-btn-sym" onclick="cmdInsert('/')">/</button>
+                <button type="button" class="cmd-btn cmd-btn-sym" onclick="cmdInsert(' ')">·</button>
+                <button type="button" class="cmd-btn cmd-btn-sym cmd-btn-newline" onclick="cmdNewLine()" title="Nova linha">↵</button>
+                <button type="button" class="cmd-btn cmd-btn-action" onclick="cmdDeleteLast()">⌫</button>
+                <button type="button" class="cmd-btn cmd-btn-action" onclick="cmdClear()">✕</button>
+              </div>
+            </div>
+            <div class="form-error" id="move-command-error"></div>
+          </div>
+
+          <!-- Descrição -->
+          <div class="form-group">
+            <label class="form-label">Descrição <span class="optional">(opcional)</span></label>
+            <input type="text" id="move-desc-input" class="form-input" placeholder="Ex: meia lua para frente + soco">
+          </div>
+
+          <!-- Observações -->
+          <div class="form-group">
+            <label class="form-label">Observações <span class="optional">(opcional)</span></label>
+            <textarea id="move-notes-input" class="form-textarea" placeholder="Ex: Funciona no canto, útil contra zoners, etc."></textarea>
+          </div>
+        </div>
+
+        <div class="add-move-footer">
+          <button class="btn btn-secondary" onclick="closeAddMoveModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveNewMove()">Salvar Movimento</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
